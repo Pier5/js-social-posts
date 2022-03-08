@@ -85,6 +85,7 @@ function createSocialPosts(posts) {
 
    const elePost = document.createElement('div');
    
+   
    elePost.classList.add('post');
 
    elePost.innerHTML = 
@@ -125,3 +126,12 @@ function createSocialPosts(posts) {
 // testo del bottone e incrementiamo il counter dei likes relativo.
 // Salviamo in un secondo array gli id dei post ai quali abbiamo messo il 
 // like.
+
+const btnLikes = document.querySelector('.like-button');
+
+btnLikes.addEventListener('click', btnEvents);
+
+function btnEvents() {
+    btnLikes.classList.add("like-button--liked");
+
+}
