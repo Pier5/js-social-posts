@@ -79,12 +79,12 @@ const container = document.querySelector('.posts-list');
 
 for (let i = 0; i < posts.length; i++) {
     createSocialPosts(posts[i]);
+    
 }
 
 function createSocialPosts(posts) {
 
    const elePost = document.createElement('div');
-   
    
    elePost.classList.add('post');
 
@@ -128,10 +128,18 @@ function createSocialPosts(posts) {
 // like.
 
 const btnLikes = document.querySelector('.like-button');
+let arrId = [];
+let eleId;
 
 btnLikes.addEventListener('click', btnEvents);
 
 function btnEvents() {
-    btnLikes.classList.add("like-button--liked");
+    let i = 0;
+    eleId = posts[i].id;
 
+    btnLikes.classList.toggle("like-button--liked");
+
+    // document.getElementsByClassName('js-likes-counter').value = i++;
+
+    arrId.push(eleId);
 }
