@@ -1,3 +1,21 @@
+// Ricreiamo un feed social aggiungendo al layout di base fornito, 
+// il nostro script JS in cui:
+// Nel file js avete un array di oggetti che rappresentano ciascun post.
+// Ogni post contiene le informazioni necessarie per stampare la relativa 
+// card:
+// id del post (numero progressivo da 1 a n),
+// nome autore,
+// foto autore,
+// data in formato americano (mm-gg-yyyy),
+// testo del post,
+// immagine (non tutti i post devono avere una immagine),
+// numero di likes.
+
+// BONUS
+// 1. Formattare le date in formato italiano (gg/mm/aaaa)
+// 3. Al click su un pulsante "Mi Piace" di un post, se abbiamo già cliccato dobbiamo 
+// decrementare il contatore e cambiare il colore del bottone.
+
 const posts = [
     {
         "id": 1,
@@ -56,37 +74,20 @@ const posts = [
     }
 ];
 
-
-// Ricreiamo un feed social aggiungendo al layout di base fornito, 
-// il nostro script JS in cui:
-// Nel file js avete un array di oggetti che rappresentano ciascun post.
-// Ogni post contiene le informazioni necessarie per stampare la relativa 
-// card:
-// id del post (numero progressivo da 1 a n),
-// nome autore,
-// foto autore,
-// data in formato americano (mm-gg-yyyy),
-// testo del post,
-// immagine (non tutti i post devono avere una immagine),
-// numero di likes.
-
-
-
 // Milestone 1 - Prendendo come riferimento il layout di esempio presente 
 // nell'html, stampiamo i post del nostro feed.
 
-const container = document.querySelector('.posts-list');
+const container = document.getElementById('container');
 
 for (let i = 0; i < posts.length; i++) {
     createSocialPosts(posts[i]);
-    
 }
 
 function createSocialPosts(posts) {
 
    const elePost = document.createElement('div');
-   
    elePost.classList.add('post');
+   elePost.dataset.postid = posts.id;
 
    elePost.innerHTML = 
     `
@@ -97,7 +98,7 @@ function createSocialPosts(posts) {
                     </div>
                     <div class="post-meta__data">
                         <div class="post-meta__author">${posts.author.name}</div>
-                        <div class="post-meta__time">${posts.created}</div>
+                        <div class="post-meta__time">${posts.created.split('-').reverse().join('/')}</div>
                     </div>                    
                 </div>
             </div>
@@ -108,17 +109,20 @@ function createSocialPosts(posts) {
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${posts.likes}</b> persone
+                        Piace a <b class="js-likes-counter">${posts.likes}</b> persone
                     </div>
                 </div> 
             </div>             
     `;
+
+    elePost.querySelector('.js-like-button').addEventListener('click', btnEvents);
+
     container.append(elePost);
 }
 
@@ -127,19 +131,32 @@ function createSocialPosts(posts) {
 // Salviamo in un secondo array gli id dei post ai quali abbiamo messo il 
 // like.
 
-const btnLikes = document.querySelector('.like-button');
 let arrId = [];
-let eleId;
 
-btnLikes.addEventListener('click', btnEvents);
+function btnEvents(event) {
+    const btnLike = this;
+    const elePost = btnLike.closest('.post');
+    const postId = elePost.dataset.postid;
+    const eleCounter = elePost.querySelector('.js-likes-counter');
+    let indexLikes = 0;
+    
+    while (postId != posts[indexLikes].id) {
+        indexLikes++;
+    }
 
-function btnEvents() {
-    let i = 0;
-    eleId = posts[i].id;
+    const objPost = posts[indexLikes];
 
-    btnLikes.classList.toggle("like-button--liked");
+    if (btnLike.classList.contains('like-button--liked')) {
+        btnLike.classList.remove('like-button--liked');
+        objPost.likes--;
+    } 
+    else {
+        btnLike.classList.add('like-button--liked');
+        objPost.likes++;
+        arrId.push(postId);
+    }
+    
+    eleCounter.innerHTML = objPost.likes;
 
-    // document.getElementsByClassName('js-likes-counter').value = i++;
-
-    arrId.push(eleId);
+    event.preventDefault();
 }
